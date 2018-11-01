@@ -1,0 +1,6 @@
+*.so
+*.o
+*.root
+*.pcm
+*.rootmap
+*.pyc
