@@ -4,7 +4,6 @@
 #pragma link off all functions;
 
 #pragma link C++ class std::string+;
-#pragma link C++ class std::set<std::string>+;
 #pragma link C++ class std::vector<std::string>+;
 #pragma link C++ class std::vector<double>+;
 
