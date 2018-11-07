@@ -13,34 +13,45 @@
 
 int main(int argc, const char** argv) {
 
-  assert(argc == 3);
+  assert(argc == 4);
 
-  std::string infile   = argv[1];
-  std::string outfile  = argv[2];
+  std::string treename = argv[1];
+  std::string infile   = argv[2];
+  std::string outfile  = argv[3];
 
-  std::string key = "events";
-  
-  TChain *tc = new TChain(key.c_str());
+  TChain *tc = new TChain(treename.c_str());
   tc->Add(infile.c_str());
   
-  int id;
-  int pdg;
-  double ereco;
+  int run;
+  int subrun;
+  int event;
+  double reco_energy;
+  double true_nu_energy;
+  double true_nu_L;
   std::map<std::string, std::vector<double> >* weights = 0;
   
-  tc->SetBranchAddress("id"     , &id);
-  tc->SetBranchAddress("pdg"    , &pdg);
-  tc->SetBranchAddress("ereco"  , &ereco);
+  tc->SetBranchAddress("run"   , &run);
+  tc->SetBranchAddress("subrun", &subrun);
+  tc->SetBranchAddress("event" , &event);
+
+  tc->SetBranchAddress("reco_energy"   , &reco_energy);
+  tc->SetBranchAddress("true_nu_energy", &true_nu_energy);
+  tc->SetBranchAddress("true_nu_L"     , &true_nu_L);
+
   tc->SetBranchAddress("weights", &weights);
 
   tc->GetEntry(0);
 
   auto tfo = TFile::Open(outfile.c_str(),"RECREATE");
   tfo->cd();
-  TTree* otree = new TTree("events","");
-  otree->Branch("id"    , &id   , "id/I");
-  otree->Branch("pdg"   , &pdg  , "pdg/I");
-  otree->Branch("ereco" , &ereco, "ereco/D");
+  TTree* otree = new TTree(treename.c_str(),"");
+  otree->Branch("run"   , &run   , "run/I");
+  otree->Branch("subrun", &subrun, "subrun/I");
+  otree->Branch("event" , &event , "event/I");
+
+  otree->Branch("reco_energy"   , &reco_energy   , "reco_energy/D");
+  otree->Branch("true_nu_energy", &true_nu_energy, "true_nu_energy/D");
+  otree->Branch("true_nu_L"     , &true_nu_L     , "true_nu_L/D");
 
   std::stringstream ss;
   std::vector<std::vector<double> > data_v(weights->size());

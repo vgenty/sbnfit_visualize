@@ -4,9 +4,9 @@ CXXFLAGS=$(shell root-config --cflags)
 
 INCFLAGS =-I.
 
-LDFLAGS=$(shell root-config --libs)
-LDFLAGS+=-L.
-LDFLAGS+=-lDict
+LDFLAGS1=$(shell root-config --libs)
+LDFLAGS2=-L.
+LDFLAGS2+=-lDict
 
 SOURCES=spread.cxx
 OBJECTS=$(SOURCES:.cxx=.o)
@@ -15,10 +15,10 @@ DICTSRC=dict.cxx
 DICTSO=libDict.so
 LINKDEF=LinkDef.h
 
-all: $(EXECUTABLE)
+all: $(DICTSO) $(EXECUTABLE)
 
-$(EXECUTABLE): $(OBJECTS) $(DICTSO)
-	$(CC) -Wl,--no-as-needed $^ -o $@ $(INCFLAGS) $(LDFLAGS)
+$(EXECUTABLE): $(OBJECTS) 
+	$(CC) $^ -o $@ $(INCFLAGS) -Wl,--as-needed $(LDFLAGS1) -Wl,--no-as-needed $(LDFLAGS2)
 
 $(OBJECTS): $(SOURCES)
 	$(CC) $(CXXFLAGS) $(INCFLAGS) -c $< -o $@
