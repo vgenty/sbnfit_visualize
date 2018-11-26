@@ -5,3 +5,4 @@
 *.rootmap
 *.pyc
 *Dict.cxx
+*.ipynb
